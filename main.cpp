@@ -1,6 +1,6 @@
 #include <iostream>
 #include <fstream>
-#include <string>
+#include <cstring>
 #include <cstdlib>
 #include <sstream>
 #include <algorithm>
@@ -39,22 +39,155 @@ struct indexlist{
 	struct indexlist * next;
 };
 
+//struct *index (){
+
 int main (int argc, char *argv[]) {
 
+	char *filename;
 	string line;
-	string entrada;
-	int ordem, k;
-	double toler, valormi;
+	//string entrada;
+	string atrib;
+	int x;
+	int y;
+	//int ordem, k;
+	//double toler, valormi;
+	struct index *root;
+	struct index *conductor;
+	struct indexlist *conductor2;
+	
 
-	if (argc==2){
+	if (argc==6){
 		//se vc entrar como argumento R.regionkey=N.regionkey, vc pode separar os campos R regionkey N regionkey
-		entrada = string(argv[1]);
-		vector<string> args = split(entrada, '=');
-		vector<string> arg1 = split(args[0], '.');
-		vector<string> arg2 = split(args[1], '.');
+		//entrada = string(argv[1]);
+		//vector<string> args = split(entrada, '=');
+		//vector<string> arg1 = split(args[0], '.');
+		//vector<string> arg2 = split(args[1], '.');
 		//std::vector<std::string> x = split("one:two::three", ':');
-		cout << arg1[0] << " " << arg1[1] << " " << arg2[0] << " " << arg2[1] << endl;
+		//cout << arg1[0] << " " << arg1[1] << " " << arg2[0] << " " << arg2[1] << endl;
+		atrib = string (argv[3]);
+		x = atoi(argv[4]);
+		y = atoi(argv[5]);
 		
+		
+		
+		if(atrib.compare("regionkey") == 0){
+			root = new struct index;
+			root->key = 0;
+			root->next = 0;
+			root->enter = 0;
+			conductor = root;
+			cout << conductor->key << endl;
+			for (int i=1; i<5; i++){
+				conductor->next = new struct index;
+				conductor = conductor->next;
+				conductor->key = i;
+				conductor->next = 0;
+				conductor->enter = 0;
+				cout << conductor->key << endl;
+			}
+		}
+		if(atrib.compare("nationkey") == 0){
+			root = new struct index;
+			root->key = 0;
+			root->next = 0;
+			root->enter = 0;
+			conductor = root;
+			for (int i=1; i<25; i++){
+				conductor->next = new struct index;
+				conductor = conductor->next;
+				conductor->key = i;
+				conductor->next = 0;
+				conductor->enter = 0;
+			}
+		}
+		if(atrib.compare("suppkey") == 0){
+			root = new struct index;
+			root->key = 1;
+			root->next = 0;
+			root->enter = 0;
+			conductor = root;
+			cout << conductor->key << endl;
+			for (int i=2; i<=10000; i++){
+				conductor->next = new struct index;
+				conductor = conductor->next;
+				conductor->key = i;
+				conductor->next = 0;
+				conductor->enter = 0;
+				cout << conductor->key << endl;
+			}
+		}
+		if(atrib.compare("custkey") == 0){
+			root = new struct index;
+			root->key = 1;
+			root->next = 0;
+			root->enter = 0;
+			conductor = root;
+			for (int i=2; i<=150000; i++){
+				conductor->next = new struct index;
+				conductor = conductor->next;
+				conductor->key = i;
+				conductor->next = 0;
+				conductor->enter = 0;
+			}
+		}
+		if(atrib.compare("partkey") == 0){
+			root = new struct index;
+			root->key = 1;
+			root->next = 0;
+			root->enter = 0;
+			conductor = root;
+			cout << conductor->key << endl;
+			for (int i=2; i<=200000; i++){
+				conductor->next = new struct index;
+				conductor = conductor->next;
+				conductor->key = i;
+				conductor->next = 0;
+				conductor->enter = 0;
+				cout << conductor->key << endl;
+			}
+		}
+		if(atrib.compare("orderkey") == 0){
+			root = new struct index;
+			root->key = 1;
+			root->next = 0;
+			root->enter = 0;
+			conductor = root;
+			for (int i=2; i<=6000000; i++){
+				conductor->next = new struct index;
+				conductor = conductor->next;
+				conductor->key = i;
+				conductor->next = 0;
+				conductor->enter = 0;
+			}
+		}
+		filename = argv[2];
+		ifstream myfile (filename);
+		//if (myfile.is_open()){
+		myfile.open(filename,ios::in);
+		while (!myfile.eof( )){
+			getline (myfile, line);
+			vector<string> coluna = split(line, '|');
+			conductor = root;
+			while (conductor->key != y)
+				conductor = conductor->next;
+			if (conductor->next == 0){
+				conductor->enter = new struct indexlist;
+				conductor2 = conductor->enter;
+				conductor2->next = 0;
+				conductor2->tupla = coluna[y];
+			}
+			else{
+				conductor2 = conductor->enter;
+				while(conductor2->next != 0)
+					conductor2 = conductor2->next;
+				conductor2->next = new struct indexlist;
+				conductor2 = conductor2->next;
+				conductor2->next = 0;
+				conductor2->tupla = coluna[y];
+			}	
+		}
+		myfile.close();
+			
 		//criar o indice do registro em questao, por exemplo regionkey varia de 0 a 4, entao deve criar uma struct index que tem variavel key que varia de 0 a 4;
 		//percorrer a tabela que o indice vai pegar. No caso de pegar a tabela nations, se, por exemplo, a tupla tem regionkey igual a 0, colocar ela na struct indexlist que é pega pela struct index com key=0. se ela for  a primeira tupla que tem regionkey igual=0, entao ela é o primeiro registro da indexlist que é achada quando se faz index->enter na index com key=0
 		//com o indice pronto, percorrer, no caso, a tabela regions e, pra cada tupla, verificar no indice que tem o mesmo regionkey. Depois entrar no indexlist.
