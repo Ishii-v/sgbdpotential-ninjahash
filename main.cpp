@@ -164,28 +164,32 @@ int main (int argc, char *argv[]) {
 		ifstream myfile (filename);
 		//if (myfile.is_open()){
 		myfile.open(filename,ios::in);
-		while (!myfile.eof( )){
-			getline (myfile, line);
+		while (getline (myfile, line)){		
+			
 			vector<string> coluna = split(line, '|');
+			aux = atoi(coluna[y-1].c_str());
 			conductor = root;
-			while (conductor->key != y)
+			while (conductor->key != aux)
 				conductor = conductor->next;
-			if (conductor->next == 0){
+			
+			if (conductor->enter == 0){
 				conductor->enter = new struct indexlist;
 				conductor2 = conductor->enter;
 				conductor2->next = 0;
-				conductor2->tupla = coluna[y];
+				conductor2->tupla = line;
 			}
 			else{
 				conductor2 = conductor->enter;
 				while(conductor2->next != 0)
 					conductor2 = conductor2->next;
+				
 				conductor2->next = new struct indexlist;
 				conductor2 = conductor2->next;
 				conductor2->next = 0;
-				conductor2->tupla = coluna[y];
-			}	
+				conductor2->tupla = line;
+			}
 		}
+		myfile.close();
 		myfile.close();
 			
 		//criar o indice do registro em questao, por exemplo regionkey varia de 0 a 4, entao deve criar uma struct index que tem variavel key que varia de 0 a 4;
