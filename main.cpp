@@ -44,6 +44,7 @@ struct indexlist{
 int main (int argc, char *argv[]) {
 
 	char *filename;
+	string saida;
 	string line;
 	//string entrada;
 	string atrib;
@@ -194,7 +195,10 @@ int main (int argc, char *argv[]) {
 		
 		filename = argv[1];
 		ifstream myfile2 (filename);
-		ofstream myfile3("ArqSaida.csv"); 
+		vector<string> prim = split(argv[1], '.');
+		vector<string> seg = split(argv[2], '.');
+		saida = prim[0] + '&' + seg[0] + ".csv";
+		ofstream myfile3 (saida.c_str()); 
 		while (getline (myfile2, line)){
 			
 			vector<string> coluna = split(line, '|');
