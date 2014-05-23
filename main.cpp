@@ -49,6 +49,7 @@ int main (int argc, char *argv[]) {
 	string atrib;
 	int x;
 	int y;
+	int aux;
 	//int ordem, k;
 	//double toler, valormi;
 	struct index *root;
@@ -163,7 +164,7 @@ int main (int argc, char *argv[]) {
 		filename = argv[2];
 		ifstream myfile (filename);
 		//if (myfile.is_open()){
-		myfile.open(filename,ios::in);
+		//myfile.open(filename,ios::in);
 		while (getline (myfile, line)){		
 			
 			vector<string> coluna = split(line, '|');
