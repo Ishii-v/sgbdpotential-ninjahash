@@ -191,8 +191,31 @@ int main (int argc, char *argv[]) {
 			}
 		}
 		myfile.close();
-		myfile.close();
+		
+		filename = argv[1];
+		ifstream myfile2 (filename);
+		ofstream myfile3("ArqSaida.csv"); 
+		while (getline (myfile2, line)){
 			
+			vector<string> coluna = split(line, '|');
+			aux = atoi(coluna[x-1].c_str());
+			conductor = root;
+			while (conductor->key != aux)
+				conductor = conductor->next;
+			if (conductor->enter != 0){
+				conductor2 = conductor->enter;
+				while(conductor2->next != 0){
+					cout << line << "|" << conductor2->tupla << endl;
+					myfile3 << line << "|" << conductor2->tupla << endl;
+					conductor2 = conductor2->next;
+				}
+				cout << line << "|" << conductor2->tupla << endl;
+				myfile3 << line << "|" << conductor2->tupla << endl;
+			}
+		}
+		myfile2.close();
+		myfile3.close();
+		
 		//criar o indice do registro em questao, por exemplo regionkey varia de 0 a 4, entao deve criar uma struct index que tem variavel key que varia de 0 a 4;
 		//percorrer a tabela que o indice vai pegar. No caso de pegar a tabela nations, se, por exemplo, a tupla tem regionkey igual a 0, colocar ela na struct indexlist que é pega pela struct index com key=0. se ela for  a primeira tupla que tem regionkey igual=0, entao ela é o primeiro registro da indexlist que é achada quando se faz index->enter na index com key=0
 		//com o indice pronto, percorrer, no caso, a tabela regions e, pra cada tupla, verificar no indice que tem o mesmo regionkey. Depois entrar no indexlist.
